@@ -1,17 +1,55 @@
 import 'package:flutter/material.dart';
+import 'package:project/controllers/bmiController.dart';
+import 'package:project/main.dart';
+import 'package:project/services/UserDB_service.dart';
 import 'package:project/views/home/calories_scale.dart';
 import 'package:project/services/auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  //Initial Data
+  String username = "";
+  double training_time = -1;
+  double bmi = -1;
+  double calories = -1;
+
+  @override
   Widget build(BuildContext context) {
+
+    //Get Data From Database
+    if (username == "") {
+      UserDBService().getUsername(auth.currentUser!.uid).then((value) => {
+            setState(() {
+              username = value ?? "No user Name"; //Get Username
+            })
+          });
+
+      UserDBService().getBmi(auth.currentUser!.uid).then((value) => {
+            setState(() {
+              bmi = value ?? 0; //Get BMI
+            })
+          });
+
+      UserDBService().getCalories(auth.currentUser!.uid).then((value) => {
+            setState(() {
+              calories = value ?? 0; //Get Calories
+            })
+          });
+
+      UserDBService().getTime(auth.currentUser!.uid).then((value) => {
+            setState(() {
+              training_time = value ?? 0; //Get Training Time
+            })
+          });
+    }
+
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text("HomeScreen"),
-      // ),
       body: Column(
         children: [
           const SizedBox(
@@ -27,14 +65,19 @@ class HomeScreen extends StatelessWidget {
 // User's Profile
               InkWell(
                 onTap: () {
+                  username = "";
                   Navigator.pushNamed(context, '/setting_screen');
                 },
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(50) ,
+                  borderRadius: BorderRadius.circular(50),
                   child: Container(
                     height: 75,
                     width: 75,
-                    child: Icon(Icons.person, size: 35, color: Colors.white,),
+                    child: Icon(
+                      Icons.person,
+                      size: 35,
+                      color: Colors.white,
+                    ),
                     color: Colors.deepPurple,
                   ),
                 ),
@@ -45,17 +88,15 @@ class HomeScreen extends StatelessWidget {
               ),
 
 // Username, Bio
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Username", style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18
-                  )),
-                  Text("bio: (inspiration)", style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18
-                  )),
+                  Text(username,
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                  Text("bio: (inspiration)",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                 ],
               ),
 
@@ -70,18 +111,14 @@ class HomeScreen extends StatelessWidget {
                   Navigator.pushNamed(context, '/login_screen');
                 },
                 child: Container(
-                  height: 40,
-                  width: 40,
-                  decoration: BoxDecoration(
-                    color: Colors.deepOrange,
-                    borderRadius: BorderRadius.circular(20)
-                  ),
-                  child: const Center(
-                    child: Icon(Icons.logout, color: Colors.white)
-                  )
-                ),
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                        color: Colors.deepOrange,
+                        borderRadius: BorderRadius.circular(20)),
+                    child: const Center(
+                        child: Icon(Icons.logout, color: Colors.white))),
               )
-
             ],
           ),
 
@@ -93,10 +130,8 @@ class HomeScreen extends StatelessWidget {
           const Row(
             children: [
               Text("       "),
-              Text("Activty", style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 25
-              ))
+              Text("Activty",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25))
             ],
           ),
 
@@ -116,33 +151,29 @@ class HomeScreen extends StatelessWidget {
                   height: 140,
                   width: 170,
                   color: Colors.orange[100],
-                  child: const Column(
+                  child: Column(
                     children: [
                       SizedBox(
                         height: 60,
                         width: 135,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Training", style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20
-                            )),
-                            Icon(Icons.fitness_center,)
-                          ]
-                        ),
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Training",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20)),
+                              Icon(
+                                Icons.fitness_center,
+                              )
+                            ]),
                       ),
-
-                      Text("45", style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20
-                      )),
-
-                      Text("minutes", style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20
-                      ))
-
+                      Text(training_time.toInt().toString(),
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20)),
+                      Text("minutes",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20))
                     ],
                   ),
                 ),
@@ -161,17 +192,15 @@ class HomeScreen extends StatelessWidget {
                         height: 60,
                         width: 135,
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Calories", style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20
-                            )),
-                            Icon(Icons.local_fire_department)
-                          ]
-                        ),
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Calories",
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20)),
+                              Icon(Icons.local_fire_department)
+                            ]),
                       ),
-
                       Container(
                         height: 125,
                         width: 125,
@@ -182,18 +211,17 @@ class HomeScreen extends StatelessWidget {
                               width: 125,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(100),
-                                border: Border.all(width: 10, color: Colors.pink.shade100),
+                                border: Border.all(
+                                    width: 10, color: Colors.pink.shade100),
                                 color: Colors.white,
                               ),
                             ),
-
                             Container(
-                              child: getRadialGauge(),
+                              child: getRadialGauge(calories),
                             )
                           ],
                         ),
                       )
-
                     ],
                   ),
                 ),
@@ -202,17 +230,15 @@ class HomeScreen extends StatelessWidget {
           ),
 
           const SizedBox(
-                height: 23,
-              ),
-          
+            height: 23,
+          ),
+
 // Text "Quick action"
           const Row(
             children: [
               Text("       "),
-              Text("Quick action", style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 25
-              ))
+              Text("Quick action",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25))
             ],
           ),
 
@@ -226,7 +252,7 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(
                 width: 20,
               ),
-              
+
               // BMI
               InkWell(
                 onTap: () {
@@ -238,33 +264,27 @@ class HomeScreen extends StatelessWidget {
                     height: 140,
                     width: 170,
                     color: Colors.green[200],
-                    child: const Column(
+                    child: Column(
                       children: [
                         SizedBox(
                           height: 60,
                           width: 135,
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("BMI", style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20
-                              )),
-                              Icon(Icons.man_rounded)
-                            ]
-                          ),
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("BMI",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20)),
+                                Icon(Icons.man_rounded)
+                              ]),
                         ),
-                
-                        Text("25.41", style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20
-                        )),
-                
-                        Text("overweight", style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20
-                        ))
-                
+                        Text(bmi.toString(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20)),
+                        Text(BmiController(bmi).getHealth(),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20))
                       ],
                     ),
                   ),
@@ -287,32 +307,30 @@ class HomeScreen extends StatelessWidget {
                 height: 60,
                 width: 300,
                 decoration: BoxDecoration(
-                  color: Colors.deepOrange[400],
-                  borderRadius: BorderRadius.circular(20)
-                ),
+                    color: Colors.deepOrange[400],
+                    borderRadius: BorderRadius.circular(20)),
                 child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text("   "),
-                    Text("Workout", style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white
-                    )),
+                    Text("Workout",
+                        style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white)),
                     Text("  "),
-                    Icon(Icons.arrow_forward_ios, 
+                    Icon(
+                      Icons.arrow_forward_ios,
                       color: Colors.white,
-                      size: 30,)
+                      size: 30,
+                    )
                   ],
                 ),
               ),
             ),
           )
-
-
         ],
       ),
     );
   }
 }
-
