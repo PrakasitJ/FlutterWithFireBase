@@ -4,16 +4,17 @@ import 'package:project/main.dart';
 
 const String IMAGES_COLLECTION_REF = "Images";
 
-class ImagesDBService{
+class ImagesDBService {
   final _firestore = FirebaseFirestore.instanceFor(app: app);
   late final CollectionReference _imagesRef;
 
-  ImagesDBService(){
-    _imagesRef = fireStore.collection(IMAGES_COLLECTION_REF).withConverter<Images>(
-      fromFirestore: (snapshots, _) => Images.fromJson(
-        snapshots.data()!,
-      ),
-      toFirestore: (images, _) => images.toJson());
+  ImagesDBService() {
+    _imagesRef =
+        fireStore.collection(IMAGES_COLLECTION_REF).withConverter<Images>(
+            fromFirestore: (snapshots, _) => Images.fromJson(
+                  snapshots.data()!,
+                ),
+            toFirestore: (images, _) => images.toJson());
   }
 
   Stream<QuerySnapshot> getImage() {
@@ -36,7 +37,7 @@ class ImagesDBService{
     return null;
   }
 
-    Future<String?> getName(String docName) async {
+  Future<String?> getName(String docName) async {
     try {
       var snapshot = await _imagesRef.doc(docName).get();
       if (snapshot.exists) {

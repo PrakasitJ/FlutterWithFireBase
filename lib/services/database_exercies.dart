@@ -4,16 +4,17 @@ import 'package:project/main.dart';
 
 const String EXERCISE_COLLECTION_REF = "Exercise";
 
-class ExerciseDBService{
+class ExerciseDBService {
   final _firestore = FirebaseFirestore.instanceFor(app: app);
   late final CollectionReference _exerciseRef;
 
-  ExerciseDBService(){
-    _exerciseRef = fireStore.collection(EXERCISE_COLLECTION_REF).withConverter<Exercise>(
-      fromFirestore: (snapshots, _) => Exercise.fromJson(
-        snapshots.data()!,
-      ),
-      toFirestore: (exercise, _) => exercise.toJson());
+  ExerciseDBService() {
+    _exerciseRef =
+        fireStore.collection(EXERCISE_COLLECTION_REF).withConverter<Exercise>(
+            fromFirestore: (snapshots, _) => Exercise.fromJson(
+                  snapshots.data()!,
+                ),
+            toFirestore: (exercise, _) => exercise.toJson());
   }
 
   Stream<QuerySnapshot> getExercise() {
@@ -52,7 +53,7 @@ class ExerciseDBService{
     return null;
   }
 
-    Future<String?> getRestTime(String docName) async {
+  Future<String?> getRestTime(String docName) async {
     try {
       var snapshot = await _exerciseRef.doc(docName).get();
       if (snapshot.exists) {
@@ -66,5 +67,9 @@ class ExerciseDBService{
       print("Error getting rest time: $e");
     }
     return null;
+  }
+
+  void addExercise(Exercise exercise) async {
+    _exerciseRef.add(exercise);
   }
 }

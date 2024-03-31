@@ -22,7 +22,7 @@ late final FirebaseFirestore fireStore;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   app = await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -31,7 +31,7 @@ void main() async {
 
   runApp(MaterialApp(
     title: "Project",
-    initialRoute: '/strength_screen',
+    initialRoute: '/',
     routes: {
       '/': (context) => const MainPage(),
       '/bottomnavbar': (context) => const BottomNavBar(),
@@ -45,7 +45,6 @@ void main() async {
       '/strength_screen': (context) => const StrengthScreen(),
       '/endurance_screen': (context) => const EnduranceScreen(),
       '/setting_screen': (context) => const SettingScreen()
-      
     },
   ));
 }

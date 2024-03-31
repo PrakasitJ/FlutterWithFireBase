@@ -51,32 +51,6 @@ class _HomeScreenState extends State<HomeScreen> {
           });
     }
 
-    // void refresh() {
-    //   DatabaseUser().getUsername(auth.currentUser!.uid).then((value) => {
-    //         setState(() {
-    //           username = value ?? "No user Name"; //Get Username
-    //         })
-    //       });
-
-    //   DatabaseUser().getBmi(auth.currentUser!.uid).then((value) => {
-    //         setState(() {
-    //           bmi = value ?? 0; //Get BMI
-    //         })
-    //       });
-
-    //   DatabaseUser().getCalories(auth.currentUser!.uid).then((value) => {
-    //         setState(() {
-    //           calories = value ?? 0; //Get Calories
-    //         })
-    //       });
-
-    //   DatabaseUser().getTime(auth.currentUser!.uid).then((value) => {
-    //         setState(() {
-    //           training_time = value ?? 0; //Get Training Time
-    //         })
-    //       });
-    // }
-
     return Scaffold(
       body: Column(
         children: [
