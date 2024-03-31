@@ -22,7 +22,6 @@ late final FirebaseFirestore fireStore;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   app = await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
